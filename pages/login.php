@@ -11,7 +11,6 @@ if (isset($_POST["user_email"])) {
     $user_password = md5($_POST["user_password"]);
 
     $query = "SELECT * FROM tbl_users WHERE user_email = '$user_email' AND user_password = '$user_password'";
-
     $data = mysqli_query($connection, $query);
     mysqli_close($connection);
     if (mysqli_num_rows($data) == 1) {
