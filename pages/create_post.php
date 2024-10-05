@@ -5,6 +5,10 @@ if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
 }
 
+if ($_SESSION["is_deactivated"] == 1) {
+    header("Location: home.php?err=accountDeactivated");
+}
+
 if (isset($_POST["blog_title"])) {
     include './components/connection.php';
     $blog_title = $_POST["blog_title"];

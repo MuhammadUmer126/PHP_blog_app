@@ -1,6 +1,11 @@
 <?php
 
 session_start();
+
+
+if (isset($_SESSION["user_id"])) {
+    header("Location: home.php");
+}
 include './components/connection.php';
 ?>
 
@@ -16,9 +21,11 @@ if (isset($_POST["user_email"])) {
     if (mysqli_num_rows($data) == 1) {
         $fetchedData = mysqli_fetch_assoc($data);
         $_SESSION["user_id"] = $fetchedData["user_id"];
+        $_SESSION["user_type"] = $fetchedData["user_type"];
         $_SESSION["user_name"] = $fetchedData["user_name"];
         $_SESSION["user_picture"] = $fetchedData["user_profile_picture"];
         $_SESSION["user_email"] = $fetchedData["user_email"];
+        $_SESSION["is_deactivated"] = $fetchedData["is_deactivated"];
         header("Location: home.php");
     } else {
         header("Location: login.php?err=invalidCred");

@@ -4,16 +4,54 @@ session_start();
 if (!isset($_SESSION["user_id"])) {
   header("Location: login.php");
 }
-
 include_once './components/connection.php';
-$query = "SELECT A.*, B.user_name FROM tbl_blogs AS A LEFT JOIN tbl_users AS B ON A.user_id = B.user_id ORDER BY blog_id DESC;";
+$paginationQuery = "SELECT blog_id FROM tbl_blogs;";
+
+$paginationData = mysqli_query($connection, $paginationQuery);
+
+$pageNo = 1;
+
+if (isset($_GET["pageNo"])) {
+  $pageNo = $_GET["pageNo"];
+}
+
+$limit = 6;
+$offset = ($pageNo - 1) * $limit;
+
+// 3 - 1 = 2 * 6 = 12
+
+
+$noOfRows = mysqli_num_rows($paginationData);
+
+
+$noOfPages = ceil($noOfRows / $limit);
+
+$query = "SELECT A.*, B.user_name FROM tbl_blogs AS A LEFT JOIN tbl_users AS B ON A.user_id = B.user_id ORDER BY blog_id DESC LIMIT  $offset , $limit ;";
+
 $data = mysqli_query($connection, $query);
 
 mysqli_close($connection);
 
-include_once './components/header.php';
 ?>
 
+
+<?php
+if (isset($_GET["err"]) && $_GET["err"] == "accountDeactivated") {
+?>
+  <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+    <span class="font-medium">Error </span>your Account Is Deactivated Contact Admin .
+  </div>
+<?php
+}
+
+?>
+
+
+
+<?php
+include_once './components/header.php';
+
+?>
 <h1 class="text-center text-4xl font-extrabold my-10 text-gray-900">Posts</h1>
 
 <div class="flex justify-center mt-6 flex-wrap">
@@ -38,5 +76,26 @@ include_once './components/header.php';
     </div>
   <?php } ?>
 </div>
+<!-- =================pagination start ================= -->
+<nav aria-label="Page navigation example" class="flex justify-center">
+  <ul class="flex items-center -space-x-px h-10 text-base">
+
+    <?php
+    for ($i = 1; $i <= $noOfPages; $i++) {
+    ?>
+      <li>
+        <a href="home.php?pageNo=<?php echo $i ?>" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"><?php echo $i ?></a>
+      </li>
+
+    <?php
+    }
+
+
+    ?>
+
+
+  </ul>
+</nav>
+<!-- =================pagination end================= -->
 
 <?php include_once './components/footer.php' ?>

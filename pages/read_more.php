@@ -29,8 +29,8 @@ include_once './components/header.php';
         <p class="text-lg mb-4"><?php echo nl2br(htmlspecialchars($fetchedData['blog_content'])); ?></p>
         <p class="italic text-gray-600">Posted By: <?php echo htmlspecialchars($fetchedData['user_name']); ?></p>
         <p class="italic text-gray-600">Posted At: <?php echo htmlspecialchars($fetchedData['blog_posted_at']); ?></p>
-        
-        <?php if ($_SESSION["user_id"] == $fetchedData["user_id"]) { ?>
+
+        <?php if ($_SESSION["user_id"] == $fetchedData["user_id"] || $_SESSION["user_type"] == 1) { ?>
             <div class="flex mt-4 space-x-2">
                 <a class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300" href="edit_post.php?blog_id=<?php echo $fetchedData['blog_id']; ?>">Edit</a>
                 <a class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300" href="delete_post.php?blog_id=<?php echo $fetchedData['blog_id']; ?>">Delete</a>
